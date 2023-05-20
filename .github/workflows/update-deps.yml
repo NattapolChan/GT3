@@ -1,0 +1,45 @@
+name: Update Deps
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *'
+
+jobs:
+  update:
+    name: Update all dependencies
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Node dependencies
+        run: HUSKY=0 pnpm install --frozen-lockfile
+
+      - name: Update Node dependencies
+        run: |
+          pnpm dlx npm-check-updates -u
+          rm -rf node_modules pnpm-lock.yaml
+          HUSKY=0 pnpm install
+
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: 'build: update dependencies to the latest version'
+          title: Update dependencies to the latest version
