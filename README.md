@@ -1,4 +1,6 @@
-*G*ui*t*ar *T*ab *Transcription* 
+## GT3: GuiTar Tab Transcription
+- Generate Guitar Tablature from audio file
+- Responsive Editor
 
 ## Getting Started
 
