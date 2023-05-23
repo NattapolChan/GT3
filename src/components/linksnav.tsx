@@ -1,13 +1,13 @@
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import clsx from 'clsx'
 
 export interface NavItemHeaderAnimation {
-    name: string;
-    x: number;
-    y: number;
-    w: string;
-  }
+  name: string
+  x: number
+  y: number
+  w: string
+}
 
 export const navItemsSelected: { [key: string]: NavItemHeaderAnimation } = {
   '/': {
@@ -34,38 +34,35 @@ export const navItemsSelected: { [key: string]: NavItemHeaderAnimation } = {
     y: -3,
     w: '45px',
   },
-};
+}
 
 const LinksNav = () => {
-
-  let pathname = usePathname() as string;
+  let pathname = usePathname() as string
   return (
     <>
-      {
-        Object.entries(navItemsSelected).map(([path, { name }]) => {
+      {Object.entries(navItemsSelected).map(([path, { name }]) => {
+        const isActive =
+          (pathname.includes(path) && path.length > 1) ||
+          (pathname == '/' && path == '/')
 
-          const isActive = (pathname.includes(path) && path.length > 1) || (pathname=='/' && path=='/');
-
-          return (
-            <Link
-              key={path}
-              href={path}
-              className={clsx(
-                'hidden lg:inline-block transition ease hover:text-teal-400 py-[2px] px-[10px]',
-                {
-                  'text-neutral-500': !isActive,
-                  'font-bold': isActive,
-                }
-              )}>
-
-              {name}
-
-            </Link>
-          )
-        })
-      }
+        return (
+          <Link
+            key={path}
+            href={path}
+            className={clsx(
+              'ease hidden px-[10px] py-[2px] transition hover:text-teal-400 lg:inline-block',
+              {
+                'text-neutral-500': !isActive,
+                'font-bold': isActive,
+              }
+            )}
+          >
+            {name}
+          </Link>
+        )
+      })}
     </>
   )
 }
 
-export default LinksNav;
+export default LinksNav
