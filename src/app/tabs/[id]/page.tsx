@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 const dummyTab = {
   bpm: 120, // dont care for now
   timeSig: [4, 4], // dont care for now
-  stringTune: ['e', 'B', 'G', 'D', 'A', 'E'],
+  stringTune: ['E', 'A', 'D', 'G', 'B', 'e'],
   tab: [
     [
       [2, 2, 4, 4, 3, 2],
@@ -18,14 +18,14 @@ const dummyTab = {
       [2, 2, 4, 4, 3, 2],
     ],
     [
-      [3, 5, 5, 4, 3, 3],
-      [3, 5, 5, 4, 3, 3],
-      [3, 5, 5, 4, 3, 3],
-      [3, 5, 5, 4, 3, 3],
-      [3, 5, 5, 4, 3, 3],
-      [3, 5, 5, 4, 3, 3],
-      [3, 5, 5, 4, 3, 3],
-      [3, 5, 5, 4, 3, 3],
+      [-1, -1, -1, -1, -1, 3],
+      [-1, -1, -1, 4, -1, 3],
+      [-1, -1, -1, -1, -1, 3],
+      [-1, -1, -1, 4, -1, 3],
+      [-1, -1, -1, 4, -1, 3],
+      [-1, -1, -1, -1, -1, 3],
+      [-1, -1, -1, 4, -1, 3],
+      [-1, -1, -1, 4, -1, 3],
     ],
     [
       [-1, 0, 0, 2, 3, 2],
@@ -78,12 +78,24 @@ export default function EditTab(): ReactNode {
         Song Name
       </div>
       <div className="w-full content-center justify-center">
-        <div className="grid-col grid divide-x lg:grid-cols-2">
+        <div className="absolute pt-4 text-sm">
+          {<Tune stringTune={dummyTab.stringTune} />}
+        </div>
+        <div className="grid-col grid lg:grid-cols-2">
           {dummyTab.tab.map((list, idx) => {
             console.log(idx)
             return (
-              <div key={idx}>
-                <EachBar key={idx} noteBarList={list} isFirst={idx == 0} />
+              <div key={`${idx} + ${list}`}>
+                <EachBar
+                  key={`${idx} + ${list}`}
+                  noteBarList={list}
+                  isFirst={idx == 0}
+                />
+                <EachTab
+                  key={`${idx} + ${list}`}
+                  noteStringList={dummyTab.stringTune}
+                  isFirst={idx == 0}
+                />
               </div>
             )
           })}
@@ -98,6 +110,47 @@ type EachBarProps = {
   isFirst: boolean
 }
 
+type EachTabProps = {
+  noteStringList: Array<string>
+  isFirst: boolean
+}
+
+const Tune = ({ stringTune }: any) => {
+  return (
+    <div className="grid -translate-x-6 grid-rows-6">
+      {stringTune.map((noteLabel: any, id: number) => {
+        return (
+          <div key={id} className="bg-slate-900 text-green-400">
+            <p>{noteLabel}</p>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+const EachTab = ({ noteStringList, isFirst }: EachTabProps) => {
+  return (
+    <div className="absolute -translate-y-36">
+      {noteStringList.map((noteString, idx) => {
+        return (
+          <div key={idx}>
+            <svg height="20" width="400">
+              <line
+                x1="0"
+                y1="18"
+                x2="390"
+                y2="18"
+                className="stroke-gray-500 stroke-2"
+              />
+            </svg>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 const EachBar = ({ noteBarList, isFirst }: EachBarProps) => {
   // console.log(noteBarList);
   // console.log(key);
@@ -108,10 +161,22 @@ const EachBar = ({ noteBarList, isFirst }: EachBarProps) => {
       <div className="grid grid-cols-8 p-4 text-center text-teal-400">
         {noteBarList.map((noteBar, idx) => {
           return (
-            <div className="grid grid-rows-6 divide-y" key={idx}>
-              {noteBar.map((note, i) => {
-                return note != -1 && <div className="text-sm">{note}</div>
-              })}
+            <div key={idx}>
+              <div className="grid grid-rows-6" key={idx}>
+                {noteBar.map((note, i) => {
+                  return (
+                    <div className="bg-slate-900" key={i}>
+                      {note != -1 ? (
+                        <div className="select-none bg-slate-900 text-sm">
+                          {note}
+                        </div>
+                      ) : (
+                        <div className="bg-slate-900 text-sm"> </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           )
         })}
