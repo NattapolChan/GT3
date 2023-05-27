@@ -1,6 +1,9 @@
 'use client'
 import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'
+import {DndContext} from '@dnd-kit/core';
+import DraggableNote from '@/components/tabs/dragablenote';
+import { DroppableNote } from '@/components/tabs/droppablenote';
 
 const dummyTab = {
   bpm: 120, // dont care for now
@@ -258,28 +261,31 @@ export default function EditTab(): ReactNode {
         Song Name
       </div>
       <div className="w-full content-center justify-center">
-        <div className="absolute pt-4 text-sm">
-          {<Tune stringTune={dummyTab.stringTune} />}
-        </div>
-        <div className="grid-col grid lg:grid-cols-2 border divide-x-[0.1px]">
-          {dummyTab.tab.map((list, idx) => {
-            console.log(idx)
-            return (
-              <div key={`${idx} + ${list}`}>
-                <EachBar
-                  key={`${idx} + ${list}`}
-                  noteBarList={list}
-                  isFirst={idx == 0}
-                />
-                <EachTab
-                  key={`${idx} + ${list}`}
-                  noteStringList={dummyTab.stringTune}
-                  isFirst={idx == 0}
-                />
-              </div>
-            )
-          })}
-        </div>
+        <DndContext>
+          <DraggableNote children={"heloo"} />
+          <DroppableNote children={"Drop heloo here"} />
+          <div className="absolute pt-4 text-sm">
+            {<Tune stringTune={dummyTab.stringTune} />}
+          </div>
+          <div className="grid-col grid lg:grid-cols-2 border divide-x-[0.1px]">
+            {dummyTab.tab.map((list, idx) => {
+              return (
+                <div key={`${idx} + ${list}`}>
+                  <EachBar
+                    key={`${idx} + ${list}`}
+                    noteBarList={list}
+                    isFirst={idx == 0}
+                  />
+                  <EachTab
+                    key={`${idx} + ${list}`}
+                    noteStringList={dummyTab.stringTune}
+                    isFirst={idx == 0}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        </DndContext>
       </div>
     </div>
   )
@@ -334,7 +340,6 @@ const EachTab = ({ noteStringList, isFirst }: EachTabProps) => {
 const EachBar = ({ noteBarList, isFirst }: EachBarProps) => {
   // console.log(noteBarList);
   // console.log(key);
-  console.log(isFirst)
   // return <div className='text-teal-400'>{JSON.stringify(noteBarList)}</div>
   return (
     <div>
