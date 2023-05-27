@@ -1,7 +1,11 @@
 import React from 'react';
 import {useDroppable} from '@dnd-kit/core';
 
-export function DroppableNote(props : any) {
+type DroppableNoteProps = {
+    children: string,
+};
+
+export function DroppableNote(props : DroppableNoteProps) {
   const {isOver, setNodeRef} = useDroppable({
     id: 'droppable',
   });
