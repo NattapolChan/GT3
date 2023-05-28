@@ -9,6 +9,9 @@ export type fretRange = IntRange<-1, 20>;
 export type EachBarProps = {
     noteBarList: Array<Array<number>>
     isFirst: boolean
+    datatabs: songObjectType
+    setDatatabs: Function
+    barnumber: number
   }
   
 export type EachTabProps = {

@@ -26,7 +26,8 @@
     "lodash": "^4.17.21",
     "next": "13.3.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-timer-hook": "^3.0.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.1",

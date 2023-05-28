@@ -1,9 +1,9 @@
 'use client'
 import { usePathname } from 'next/navigation'
-import { type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Tune, EachBar, EachTab } from '@/components/tabs/eachnotefield'
 import { type songObjectType } from '@/type/tabs'
-
+import { useTimer  } from 'react-timer-hook'
 
 const dummyTab : songObjectType = {
   bpm: 120, // dont care for now
@@ -254,29 +254,76 @@ const dummyTab : songObjectType = {
 }
 
 
+// function MyTimer({ expiryTimestamp }) {
+//   const {
+//     seconds,
+//     minutes,
+//     hours,
+//     days,
+//     isRunning,
+//     start,
+//     pause,
+//     resume,
+//     restart,
+//   } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
+
+
+//   return (
+//     <div className='text-center text-green-500'>
+//       <h1>react-timer-hook </h1>
+//       <p>Timer Demo</p>
+//       <div style={{fontSize: '100px'}}>
+//         <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
+//       </div>
+//       <p>{isRunning ? 'Running' : 'Not running'}</p>
+//       <button onClick={start}>Start</button>
+//       <button onClick={pause}>Pause</button>
+//       <button onClick={resume}>Resume</button>
+//       <button onClick={() => {
+//         // Restarts to 5 minutes timer
+//         const time = new Date();
+//         time.setSeconds(time.getSeconds() + 300);
+//         restart(time)
+//       }}>Restart</button>
+//     </div>
+//   );
+// }
+
+
 export default function EditTab(): ReactNode {
   let pathname = usePathname() as string
+  const time = new Date();
+
+  const [datatabs, setDatatabs] = useState(dummyTab)
+  console.log(datatabs)
+
+  time.setSeconds(time.getSeconds() + 600);
+
   return (
     <div className="w-full">
       <div className="px-auto text-40 mx-auto py-6 text-center font-mono text-2xl text-teal-400">
         Song Name
       </div>
+      {/* <MyTimer expiryTimestamp={time} /> */}
       <div className="w-full content-center justify-center">
           <div className="absolute pt-4 text-sm">
-            {<Tune stringTune={dummyTab.stringTune} />}
+            {<Tune stringTune={datatabs.stringTune} />}
           </div>
           <div className="grid-col grid lg:grid-cols-2 border divide-x-[0.1px]">
-            {dummyTab.tab.map((list, idx) => {
+            {datatabs.tab.map((list, idx) => {
               return (
                 <div key={`${idx} + ${list}`}>
                   <EachBar
-                    key={`${idx}`}
+                    key={"bar-"+`${idx}`}
                     noteBarList={list}
                     isFirst={idx == 0}
+                    datatabs={datatabs}
+                    setDatatabs={setDatatabs}
+                    barnumber={idx}
                   />
                   <EachTab
-                    key={`${-1-idx}`}
-                    noteStringList={dummyTab.stringTune}
+                    key={"tab-"+`${idx}`}
+                    noteStringList={datatabs.stringTune}
                     isFirst={idx == 0}
                   />
                 </div>

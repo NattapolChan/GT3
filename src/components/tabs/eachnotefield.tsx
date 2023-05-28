@@ -4,7 +4,7 @@ import { debounceAsync } from '@/components/tabs/debounceasync';
 import AutoSave from '@/components/tabs/autosave';
 import NoteInput from '@/components/tabs/noteinput';
 
-import { type EachBarProps, EachTabProps } from '@/type/tabs';
+import { type EachBarProps, EachTabProps, Values } from '@/type/tabs';
 
 export const Tune = ({ stringTune }: any) => {
     return (
@@ -42,22 +42,20 @@ export const EachTab = ({ noteStringList, isFirst }: EachTabProps) => {
     )
 }
   
-export const EachBar = ({ noteBarList, isFirst }: EachBarProps) => {
+export const EachBar = ({ noteBarList, isFirst, datatabs, setDatatabs, barnumber }: EachBarProps) => {
     // console.log(noteBarList);
     // console.log(key);
     // return <div className='text-teal-400'>{JSON.stringify(noteBarList)}</div>
-  
-    const onSubmit = useCallback(async (values) => {
-      console.log(values.note);
-      // simulate http request
-      await delay(2000);
-  
-      return true;
-    }, []);
-  
-    const onSubmitDebounced = useMemo(() => {
-      return debounceAsync(onSubmit, 400);
-    }, [onSubmit]);
+    const updateNoteInDatatabs = (values : Values, stringId: number, tabId: number, barId: number) => {
+      let newdatatabsArray = [...datatabs.tab]
+      newdatatabsArray[barId][tabId][stringId] = parseInt(values.note)
+      setDatatabs({
+        bpm: datatabs.bpm, 
+        timeSig: datatabs.timeSig, 
+        stringTune: datatabs.stringTune,
+        tab: newdatatabsArray,
+      })
+    }
   
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
   
@@ -76,10 +74,9 @@ export const EachBar = ({ noteBarList, isFirst }: EachBarProps) => {
                               <Formik
                                 initialValues={{ note: note==-1 ? "" : note }}
                                 onSubmit={async (values) => {
-                                  console.log({ values });
-                                  // simulate http request
+                                  updateNoteInDatatabs(values, i, idx, barnumber);
                                   await delay(2000);
-  
+                                  
                                   return true;
                                 }}
                               >

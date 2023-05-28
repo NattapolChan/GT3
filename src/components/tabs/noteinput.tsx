@@ -20,16 +20,12 @@ const NoteInput = (props: NoteInputProps) => {
   };
 
   return (
-    <div>
+    <div className="select-none">
       <input
         {...field}
         {...props}
         onChange={onChange}
-        style={{
-          background: "initial",
-          width: `20px`,
-          justifySelf: "center"
-        }}
+        className="w-4 bg-transparent select-none"
       />
     </div>
   );
