@@ -56,11 +56,72 @@ export const EachBar = ({ noteBarList, isFirst, datatabs, setDatatabs, barnumber
         tab: newdatatabsArray,
       })
     }
-  
+
+    const addNoteInDatatabs = (barId: number) => {
+    	const emptytabsArray = [
+		[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
+		[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
+	]
+	let newdatatabsArray = [
+					...datatabs.tab.slice(0, barId+1),
+					emptytabsArray,
+					...datatabs.tab.slice(barId+1),
+				]
+      setDatatabs({
+        bpm: datatabs.bpm, 
+        timeSig: datatabs.timeSig, 
+        stringTune: datatabs.stringTune,
+        tab: newdatatabsArray,
+      })
+    }
+
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-  
+  	const [isHover, setIsHover] = useState(false)
+	const handleMouseEnter = () => {
+		setIsHover(true)
+		console.log("enter")
+	}
+	const handleMouseLeave = () => {
+		setIsHover(false)
+		console.log("leave")
+	}
+	const handleAddOneBar = () => {
+		console.log("add")
+		console.log(barnumber)
+		addNoteInDatatabs(barnumber)	
+	}
     return (
-      <div>
+      <div className="relative bg-transparent w-full z-20"
+		onMouseEnter={handleMouseEnter}
+		onMouseLeave={handleMouseLeave}
+      >
+        <div className="w-6 absolute right-0 z-20" >
+          {isHover && 
+	<div>
+	  <button onClick={handleAddOneBar}>
+		<svg xmlns="http://www.w3.org/2000/svg" width="20" 
+			height="20" viewBox="0 0 24 24" fill="none" 
+			stroke="white" stroke-width="2" 
+			stroke-linecap="round" stroke-linejoin="round" 
+			class="lucide lucide-plus-circle"
+		>
+			<circle cx="12" cy="12" r="10">
+			</circle>
+			<line x1="12" x2="12" y1="8" y2="16">
+			</line>
+			<line x1="8" x2="16" y1="12" y2="12"></line>
+		</svg>
+          </button>
+	  
+	  <button onClick={handleAddOneBar}>
+          	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" 
+		stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2">
+		<path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+		<line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+	  </button>
+	  </div>
+	  }
+        </div>
         <div className="grid grid-cols-8 p-4 text-center text-teal-400">
           {noteBarList.map((noteBar, idx) => {
             return (
@@ -68,8 +129,8 @@ export const EachBar = ({ noteBarList, isFirst, datatabs, setDatatabs, barnumber
                 <div className="grid grid-rows-6" key={idx}>
                   {noteBar.map((note, i) => {
                     return (
-                      <div className="bg-slate-900" key={i}>
-                          <div className="select-none bg-slate-900 text-sm">
+                      <div key={i}>
+                          <div className="select-none text-sm">
                             <div className="relative translate-x-3 w-4 bg-slate-900 z-10">
                               <Formik
                                 initialValues={{ note: note==-1 ? "" : note }}
@@ -96,7 +157,7 @@ export const EachBar = ({ noteBarList, isFirst, datatabs, setDatatabs, barnumber
               </div>
             )
           })}
-        </div>
       </div>
-    )
+    </div>
+  )
 }
