@@ -58,6 +58,9 @@ dependencies:
   react-timer-hook:
     specifier: ^3.0.6
     version: 3.0.6(react@18.2.0)
+  tone:
+    specifier: ^14.8.49
+    version: 14.8.49
 
 devDependencies:
   '@commitlint/cli':
@@ -175,6 +178,16 @@ packages:
     dependencies:
       regenerator-runtime: 0.13.11
     dev: true
+
+  /@babel/runtime@7.22.3:
+    resolution:
+      {
+        integrity: sha512-XsDuspWKLUsxwCp6r7EhsExHtYfbe5oAGQ19kqngTdCPUoPQzOPdUbD/pB9PJiwb2ptYKQDjSJT3R6dC+EPqfQ==,
+      }
+    engines: { node: '>=6.9.0' }
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
 
   /@colors/colors@1.5.0:
     resolution:
@@ -1768,6 +1781,17 @@ packages:
       }
     engines: { node: '>= 4.0.0' }
     dev: true
+
+  /automation-events@6.0.3:
+    resolution:
+      {
+        integrity: sha512-RxBkiL3EVdKcRphs/G7E142fPITrXRHOUwpOc/pWio5EY5P17MNdn5YeIvIFcmtZJ55cWHGDzuKzRlPsB7ZRkg==,
+      }
+    engines: { node: '>=16.1.0' }
+    dependencies:
+      '@babel/runtime': 7.22.3
+      tslib: 2.5.2
+    dev: false
 
   /autoprefixer@10.4.14(postcss@8.4.23):
     resolution:
@@ -6568,7 +6592,6 @@ packages:
       {
         integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==,
       }
-    dev: true
 
   /regexp.prototype.flags@1.5.0:
     resolution:
@@ -7059,6 +7082,17 @@ packages:
       through: 2.3.8
     dev: true
 
+  /standardized-audio-context@25.3.50:
+    resolution:
+      {
+        integrity: sha512-FGuX3OBOQ7qj9pjX6Fx7SbrIWxYIx02i7iWr04DBo/Gxzm2pEpZpaZ411ew6PLet7hfgbKbp5tDII2jnftRetQ==,
+      }
+    dependencies:
+      '@babel/runtime': 7.22.3
+      automation-events: 6.0.3
+      tslib: 2.5.2
+    dev: false
+
   /stop-iteration-iterator@1.0.0:
     resolution:
       {
@@ -7513,6 +7547,16 @@ packages:
       is-number: 7.0.0
     dev: true
 
+  /tone@14.8.49:
+    resolution:
+      {
+        integrity: sha512-L5YLleEFvkuBYQ83eEL0Fg5DSQS7B28v32sYejnnl8b9yXSytM1X/jNJM1DrB525JGwFb5Pmq5OYZPD9oYQbCQ==,
+      }
+    dependencies:
+      standardized-audio-context: 25.3.50
+      tslib: 2.5.0
+    dev: false
+
   /tr46@0.0.3:
     resolution:
       {
@@ -7599,6 +7643,13 @@ packages:
       {
         integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==,
       }
+
+  /tslib@2.5.2:
+    resolution:
+      {
+        integrity: sha512-5svOrSA2w3iGFDs1HibEVBGbDrAY82bFQ3HZ3ixB+88nsbsWQoKqDRb5UBYAUPEzbBn6dAp5gRNXglySbx1MlA==,
+      }
+    dev: false
 
   /tsutils@3.21.0(typescript@5.0.4):
     resolution:

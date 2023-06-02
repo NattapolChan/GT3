@@ -1,9 +1,10 @@
 'use client'
 import { usePathname } from 'next/navigation'
-import { useState, type ReactNode } from 'react'
+import { useState, useRef, useEffect, type ReactNode } from 'react'
 import { Tune, EachBar, EachTab } from '@/components/tabs/eachnotefield'
 import { type songObjectType } from '@/type/tabs'
 import { useTimer  } from 'react-timer-hook'
+import * as Tone from 'tone'
 
 const dummyTab : songObjectType = {
   bpm: 120, // dont care for now
@@ -295,9 +296,13 @@ export default function EditTab(): ReactNode {
   const time = new Date();
 
   const [datatabs, setDatatabs] = useState(dummyTab)
-  console.log(datatabs)
+  
+  const [barInClipboard, setBarInClipboard] = useState([
+	[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
+	[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
+  ])
 
-  time.setSeconds(time.getSeconds() + 600);
+  // time.setSeconds(time.getSeconds() + 600);
 
   return (
     <div className="w-full">
@@ -306,6 +311,7 @@ export default function EditTab(): ReactNode {
       </div>
       {/* <MyTimer expiryTimestamp={time} /> */}
       <div className="w-full content-center justify-center">
+        <button className="text-green-400">play</button>
           <div className="absolute pt-4 text-sm">
             {<Tune stringTune={datatabs.stringTune} />}
           </div>
@@ -320,6 +326,8 @@ export default function EditTab(): ReactNode {
                     datatabs={datatabs}
                     setDatatabs={setDatatabs}
                     barnumber={idx}
+                    barInClipboard={barInClipboard}
+		                setBarInClipboard={setBarInClipboard}
                   />
                   <EachTab
                     key={"tab-"+`${idx}`}

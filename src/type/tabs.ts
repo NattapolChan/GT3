@@ -12,8 +12,10 @@ export type EachBarProps = {
     datatabs: songObjectType
     setDatatabs: Function
     barnumber: number
-  }
-  
+    barInClipboard: Array<Array<number>>
+    setBarInClipboard: Function
+}
+
 export type EachTabProps = {
     noteStringList: Array<string>
     isFirst: boolean
