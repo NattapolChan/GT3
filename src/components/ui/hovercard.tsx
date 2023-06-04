@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Popper } from 'react-popper';
+import { useState } from 'react'
+import { Popper } from 'react-popper'
 
-const HoverCard = ({ content, children } : any) => {
-  const [isOpen, setIsOpen] = useState(false);
+const HoverCard = ({ content, children }: any) => {
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleMouseEnter = () => {
-    setIsOpen(true);
-  };
+    setIsOpen(true)
+  }
 
   const handleMouseLeave = () => {
-    setIsOpen(false);
-  };
+    setIsOpen(false)
+  }
 
   return (
     <Popper>
@@ -36,7 +36,7 @@ const HoverCard = ({ content, children } : any) => {
         </>
       )}
     </Popper>
-  );
-};
+  )
+}
 
-export default HoverCard;
+export default HoverCard

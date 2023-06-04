@@ -1,23 +1,23 @@
-import { useField, useFormikContext } from "formik";
+import { useField, useFormikContext } from 'formik'
 
 interface NoteInputProps {
-  name: string;
-  id: string;
-  placeholder?: string;
-  onChange?: (value: string | null) => void;
-  onFocus?: () => void;
-  disabled?: boolean,
+  name: string
+  id: string
+  placeholder?: string
+  onChange?: (value: string | null) => void
+  onFocus?: () => void
+  disabled?: boolean
 }
 
 const NoteInput = (props: NoteInputProps) => {
-  const [field] = useField(props.name);
+  const [field] = useField(props.name)
 
-  const formikContext = useFormikContext();
+  const formikContext = useFormikContext()
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
-    formikContext.setFieldValue(field.name, e.currentTarget.value);
-    if (props.onChange) props.onChange(e.currentTarget.value);
-  };
+    formikContext.setFieldValue(field.name, e.currentTarget.value)
+    if (props.onChange) props.onChange(e.currentTarget.value)
+  }
 
   return (
     <div className="select-none">
@@ -25,10 +25,10 @@ const NoteInput = (props: NoteInputProps) => {
         {...field}
         {...props}
         onChange={onChange}
-        className="w-4 bg-transparent select-none"
+        className="w-4 select-none bg-transparent"
       />
     </div>
-  );
-};
+  )
+}
 
-export default NoteInput;
+export default NoteInput
