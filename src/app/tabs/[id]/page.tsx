@@ -1,10 +1,11 @@
 'use client'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState, useRef, useEffect, type ReactNode } from 'react'
 import { Tune, EachBar, EachTab } from '@/components/tabs/eachnotefield'
 import { type songObjectType } from '@/type/tabs'
-import { useTimer  } from 'react-timer-hook'
-import * as Tone from 'tone'
+import { useTimer } from 'react-timer-hook'
+import { Sampler } from 'tone/build/esm/instrument/Sampler'
+import {  getDestination} from 'tone/build/esm/index'
 
 const dummyTab : songObjectType = {
   bpm: 120, // dont care for now
@@ -304,6 +305,24 @@ export default function EditTab(): ReactNode {
 
   // time.setSeconds(time.getSeconds() + 600);
 
+  const [isLoaded, setIsLoaded] = useState(false)
+  const guitarAcoustic = useRef<Sampler | null>(null)
+  
+  useEffect(() => {
+    const sampler = new Sampler({
+      urls: {
+        A3: "A3.mp3",
+      },
+      baseUrl: "/samples/guitar-acoustic/",
+      onload: () => {
+        setIsLoaded(true)
+      },
+
+    })
+    guitarAcoustic.current = sampler.connect(getDestination())
+    guitarAcoustic.current.toDestination()
+  }, [])
+
   return (
     <div className="w-full">
       <div className="px-auto text-40 mx-auto py-6 text-center font-mono text-2xl text-teal-400">
@@ -311,7 +330,15 @@ export default function EditTab(): ReactNode {
       </div>
       {/* <MyTimer expiryTimestamp={time} /> */}
       <div className="w-full content-center justify-center">
-        <button className="text-green-400">play</button>
+        <button 
+          onClick={(_) => {
+            if (!isLoaded || guitarAcoustic.current == null)
+              return
+            guitarAcoustic.current.triggerAttackRelease("A3", "8n")
+          }}
+          className="text-green-400"
+          disabled={!isLoaded}
+          >play</button>
           <div className="absolute pt-4 text-sm">
             {<Tune stringTune={datatabs.stringTune} />}
           </div>
