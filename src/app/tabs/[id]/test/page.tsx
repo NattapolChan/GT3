@@ -1,86 +1,68 @@
 'use client'
-import React, {useState, useMemo} from 'react';
-import {DndContext} from '@dnd-kit/core';
-import { createSnapModifier } from '@dnd-kit/modifiers';
+import { useState, ChangeEvent, type ReactNode } from 'react'
+import { Tune, EachBar, EachTab } from '@/components/tabs/eachnotefield'
+import { dummyTab } from '@/dummydata/dummytab'
 
-const tabLength = 20
+export default function EditTab(): ReactNode {
 
-const initstring = () => {
-  let array = ['E', 'A', 'D', 'G', 'B', 'e']
-  let stringid = []
-  for (let i = 0;i < 6; i++) {
-    for (let j = 0;j<tabLength;j++) {
-      stringid.push(array[i]+j)
-    }
-  }
-  return stringid
-}
-
-export default function App() {
-  const containers = ['A', 'B', 'C'];
-  const [parent, setParent] = useState(null);
-  const draggableMarkup = (
-    <Draggable id="draggable">
-      <div className='text-red-500'>Drag me</div>
-    </Draggable>
-  );
-  console.log(initstring())
-  return (
-    <DndContext onDragEnd={handleDragEnd}>
-      {parent === null ? draggableMarkup : null}
-
-      {containers.map((id) => (
-        // We updated the Droppable component so it would accept an `id`
-        // prop and pass it to `useDroppable`
-        <Droppable key={id} id={id}>
-          <text className='text-green-500'>{parent === id ? draggableMarkup : id}</text>
-        </Droppable>
-      ))}
-    </DndContext>
-  );
-
-  function handleDragEnd(event: any) {
-    const {over} = event;
-
-    // If the item is dropped over a container, set it as the parent
-    // otherwise reset the parent to `null`
-    setParent(over ? over.id : null);
-  }
-};
-
-import {useDroppable} from '@dnd-kit/core';
-
-function Droppable(props: any) {
-  const {isOver, setNodeRef} = useDroppable({
-    id: props.id,
-  });
-  const style = {
-    color: isOver ? 'green' : undefined,
-  };
+  const [datatabs, setDatatabs] = useState(dummyTab)
   
-  
+  const [barInClipboard, setBarInClipboard] = useState([
+	[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
+	[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
+  ])
+
+  const [file, setFile] = useState<File>();
+
+  const handleinputfile = (e : ChangeEvent<HTMLInputElement>) => {
+    setFile(e.target.files[0])
+    console.log("hi")
+    console.log(file)
+  }
+
+  const handleSubmit = () => {
+    console.log(file)
+  }
+
   return (
-    <div ref={setNodeRef} style={style}>
-      {props.children}
+    <div className="w-screen">
+      <div className="px-auto text-40 mx-auto py-6 text-center font-mono text-2xl text-teal-400">
+        Song Name
+      </div>
+      {/* <MyTimer expiryTimestamp={time} /> */}
+      <div className="w-9/12 px-auto mx-auto content-center justify-center">
+        <button className="text-green-400">play</button>
+        <button onSubmit={handleSubmit}>
+          <input type='file' onChange={(e) => handleinputfile}></input>
+        </button>
+          <div className="absolute pt-4 text-sm">
+            {<Tune stringTune={datatabs.stringTune} />}
+          </div>
+          <div className="grid-col grid lg:grid-cols-3 grid-cols-2 border divide-x-[0.1px]">
+            {datatabs.tab.map((list, idx) => {
+              return (
+                <div key={`${idx} + ${list}`}>
+                  <EachBar
+                    key={"bar-"+`${idx}`}
+                    noteBarList={list}
+                    isFirst={idx == 0}
+                    datatabs={datatabs}
+                    setDatatabs={setDatatabs}
+                    barnumber={idx}
+                    barInClipboard={barInClipboard}
+		                setBarInClipboard={setBarInClipboard}
+                  />
+                  <EachTab
+                    key={"tab-"+`${idx}`}
+                    noteStringList={datatabs.stringTune}
+                    isFirst={idx == 0}
+                  />
+                </div>
+              )
+            })}
+          </div>
+      </div>
     </div>
-  );
+  )
 }
 
-import {useDraggable} from '@dnd-kit/core';
-import { stringify } from 'querystring';
-
-export function Draggable(props: any) {
-  const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: props.id,
-  });
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
-
-  
-  return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {props.children}
-    </button>
-  );
-}
