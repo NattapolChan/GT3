@@ -8,10 +8,10 @@ import { type EachBarProps, EachTabProps, Values } from '@/type/tabs'
 
 export const Tune = ({ stringTune }: any) => {
   return (
-    <div className="grid -translate-x-6 grid-rows-6">
+    <div className="grid -translate-x-6 grid-rows-6 translate-y-1.5">
       {stringTune.map((noteLabel: any, id: number) => {
         return (
-          <div key={id} className="bg-slate-900 text-green-400">
+          <div key={id} className="bg-slate-900 text-green-400 text-xs leading-3 font-extrabold ">
             <p>{noteLabel}</p>
           </div>
         )
@@ -22,19 +22,19 @@ export const Tune = ({ stringTune }: any) => {
 
 export const EachTab = ({ noteStringList, isFirst }: EachTabProps) => {
   return (
-    <div className="absolute -translate-y-36">
+    <div className="absolute lg:w-1/4 w-[37.325%] -translate-y-24">
       {noteStringList.map((noteString, idx) => {
         return (
           <div key={idx} className="z-0">
-            <svg height="20" width="400">
+            {<svg width="100%" height="12">
               <line
-                x1="0"
-                y1="18"
-                x2="380"
-                y2="18"
-                className="stroke-gray-500 stroke-2"
+                x1="0%"
+                y1="95%"
+                x2="100%"
+                y2="95%"
+                className="stroke-gray-500 stroke-4"
               />
-            </svg>
+            </svg>}
           </div>
         )
       })}
@@ -234,7 +234,7 @@ export const EachBar = ({
           </div>
         )}
       </div>
-      <div className="grid grid-cols-8 p-4 text-center text-teal-400">
+      <div className="grid grid-cols-8 p-5 px-1 text-center text-teal-400">
         {noteBarList.map((noteBar, idx) => {
           return (
             <div key={idx}>
@@ -242,8 +242,15 @@ export const EachBar = ({
                 {noteBar.map((note, i) => {
                   return (
                     <div key={i}>
-                      <div className="select-none text-sm">
-                        <div className="relative z-10 w-4 translate-x-3 bg-slate-900">
+                      <div className="select-none text-xs leading-3 font-extrabold h-3">
+                        <div 
+                          className={
+                            (note==-1) ? 
+                            "relative z-10 w-4 translate-x-3 my-0 bg-transparent hover:bg-slate-900"
+                            :
+                            "relative z-10 w-4 translate-x-3 my-0 bg-slate-900"
+                          }
+                        >
                           <Formik
                             initialValues={{ note: note == -1 ? '' : note }}
                             onSubmit={async (values) => {

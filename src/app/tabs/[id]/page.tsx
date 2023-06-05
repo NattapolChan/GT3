@@ -1,5 +1,5 @@
 'use client'
-import { useState, type ReactNode } from 'react'
+import { useState, ChangeEvent, type ReactNode } from 'react'
 import { Tune, EachBar, EachTab } from '@/components/tabs/eachnotefield'
 import { dummyTab } from '@/dummydata/dummytab'
 
@@ -13,17 +13,20 @@ export default function EditTab(): ReactNode {
   ])
 
   return (
-    <div className="w-full">
+    <div className="w-screen">
       <div className="px-auto text-40 mx-auto py-6 text-center font-mono text-2xl text-teal-400">
         Song Name
       </div>
       {/* <MyTimer expiryTimestamp={time} /> */}
-      <div className="w-full content-center justify-center">
+      <div className="w-9/12 px-auto mx-auto content-center justify-center">
         <button className="text-green-400">play</button>
+        <button>
+          <input type='file'></input>
+        </button>
           <div className="absolute pt-4 text-sm">
             {<Tune stringTune={datatabs.stringTune} />}
           </div>
-          <div className="grid-col grid lg:grid-cols-2 border divide-x-[0.1px]">
+          <div className="grid-col grid lg:grid-cols-3 grid-cols-2 border divide-x-[0.1px]">
             {datatabs.tab.map((list, idx) => {
               return (
                 <div key={`${idx} + ${list}`}>
