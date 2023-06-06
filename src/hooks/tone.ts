@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Time } from "tone/build/esm/core/type/Units"
 import { getDestination } from "tone/build/esm/index"
 import { Sampler, SamplerOptions } from "tone/build/esm/instrument/Sampler"
@@ -104,9 +104,14 @@ export type Note<T extends Instrument> = T extends keyof typeof notes
 
 export const useSampler = (instrument: Instrument) => {
   const [isLoaded, setIsLoaded] = useState(false)
-  const { sampler, error } = useMemo(() => {
+  const [sampler, setSampler] = useState<SamplerT<typeof instrument> | null>(
+    null
+  )
+  const [error, setError] = useState<Error | null>(null)
+
+  useEffect(() => {
     try {
-      console.log("loading")
+      console.log("Loading instrument: ", instrument)
       const sampler = new SamplerT<typeof instrument>({
         urls: notes[instrument],
         baseUrl: `/samples/${instrument}/`,
@@ -119,10 +124,9 @@ export const useSampler = (instrument: Instrument) => {
 
       sampler.connect(destination)
 
-      return { sampler, error: null }
+      setSampler(sampler)
     } catch (error) {
-      console.error(error)
-      return { sampler: null, error: error as Error }
+      setError(error as Error)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

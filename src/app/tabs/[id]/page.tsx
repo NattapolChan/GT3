@@ -315,6 +315,22 @@ export default function EditTab(): ReactNode {
     error,
   } = useSampler("guitar-acoustic")
 
+  useEffect(() => {
+    const keypressHandler = (e: KeyboardEvent) => {
+      if (e.key === "c") {
+        if (!isLoaded || guitarAcoustic == null) return
+        // play a c major chord
+        guitarAcoustic?.playNote(["C3", "E3", "G3"], "2")
+      }
+    }
+
+    window.addEventListener("keypress", keypressHandler)
+
+    return () => {
+      window.removeEventListener("keypress", keypressHandler)
+    }
+  }, [guitarAcoustic])
+
   return (
     <div className="w-full">
       <div className="px-auto text-40 mx-auto py-6 text-center font-mono text-2xl text-teal-400">
