@@ -1,16 +1,17 @@
-'use client'
-import { usePathname, useRouter } from 'next/navigation'
-import { useState, useRef, useEffect, type ReactNode } from 'react'
-import { Tune, EachBar, EachTab } from '@/components/tabs/eachnotefield'
-import { type songObjectType } from '@/type/tabs'
-import { useTimer } from 'react-timer-hook'
-import { Sampler } from 'tone/build/esm/instrument/Sampler'
-import {  getDestination} from 'tone/build/esm/index'
+"use client"
 
-const dummyTab : songObjectType = {
+import { useEffect, useRef, useState, type ReactNode } from "react"
+import { usePathname, useRouter } from "next/navigation"
+import { type songObjectType } from "@/type/tabs"
+import { useTimer } from "react-timer-hook"
+
+import { useSampler } from "@/hooks/tone"
+import { EachBar, EachTab, Tune } from "@/components/tabs/eachnotefield"
+
+const dummyTab: songObjectType = {
   bpm: 120, // dont care for now
   timeSig: [4, 4], // dont care for now
-  stringTune: ['E', 'A', 'D', 'G', 'B', 'e'],
+  stringTune: ["E", "A", "D", "G", "B", "e"],
   tab: [
     [
       [2, 2, 4, 4, 3, 2],
@@ -255,7 +256,6 @@ const dummyTab : songObjectType = {
   ],
 }
 
-
 // function MyTimer({ expiryTimestamp }) {
 //   const {
 //     seconds,
@@ -268,7 +268,6 @@ const dummyTab : songObjectType = {
 //     resume,
 //     restart,
 //   } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
-
 
 //   return (
 //     <div className='text-center text-green-500'>
@@ -291,37 +290,30 @@ const dummyTab : songObjectType = {
 //   );
 // }
 
-
 export default function EditTab(): ReactNode {
   let pathname = usePathname() as string
-  const time = new Date();
+  const time = new Date()
 
   const [datatabs, setDatatabs] = useState(dummyTab)
-  
+
   const [barInClipboard, setBarInClipboard] = useState([
-	[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
-	[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1],
+    [-1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1],
   ])
 
   // time.setSeconds(time.getSeconds() + 600);
 
-  const [isLoaded, setIsLoaded] = useState(false)
-  const guitarAcoustic = useRef<Sampler | null>(null)
-  
-  useEffect(() => {
-    const sampler = new Sampler({
-      urls: {
-        A3: "A3.mp3",
-      },
-      baseUrl: "/samples/guitar-acoustic/",
-      onload: () => {
-        setIsLoaded(true)
-      },
-
-    })
-    guitarAcoustic.current = sampler.connect(getDestination())
-    guitarAcoustic.current.toDestination()
-  }, [])
+  const {
+    sampler: guitarAcoustic,
+    isLoaded,
+    error,
+  } = useSampler("guitar-acoustic")
 
   return (
     <div className="w-full">
@@ -330,43 +322,43 @@ export default function EditTab(): ReactNode {
       </div>
       {/* <MyTimer expiryTimestamp={time} /> */}
       <div className="w-full content-center justify-center">
-        <button 
+        <button
           onClick={(_) => {
-            if (!isLoaded || guitarAcoustic.current == null)
-              return
-            guitarAcoustic.current.triggerAttackRelease("A3", "8n")
+            if (!isLoaded || guitarAcoustic == null) return
+            guitarAcoustic.playNote("A3", "2")
           }}
           className="text-green-400"
           disabled={!isLoaded}
-          >play</button>
-          <div className="absolute pt-4 text-sm">
-            {<Tune stringTune={datatabs.stringTune} />}
-          </div>
-          <div className="grid-col grid lg:grid-cols-2 border divide-x-[0.1px]">
-            {datatabs.tab.map((list, idx) => {
-              return (
-                <div key={`${idx} + ${list}`}>
-                  <EachBar
-                    key={"bar-"+`${idx}`}
-                    noteBarList={list}
-                    isFirst={idx == 0}
-                    datatabs={datatabs}
-                    setDatatabs={setDatatabs}
-                    barnumber={idx}
-                    barInClipboard={barInClipboard}
-		                setBarInClipboard={setBarInClipboard}
-                  />
-                  <EachTab
-                    key={"tab-"+`${idx}`}
-                    noteStringList={datatabs.stringTune}
-                    isFirst={idx == 0}
-                  />
-                </div>
-              )
-            })}
-          </div>
+        >
+          play
+        </button>
+        <div className="absolute pt-4 text-sm">
+          {<Tune stringTune={datatabs.stringTune} />}
+        </div>
+        <div className="grid-col grid divide-x-[0.1px] border lg:grid-cols-2">
+          {datatabs.tab.map((list, idx) => {
+            return (
+              <div key={`${idx} + ${list}`}>
+                <EachBar
+                  key={"bar-" + `${idx}`}
+                  noteBarList={list}
+                  isFirst={idx == 0}
+                  datatabs={datatabs}
+                  setDatatabs={setDatatabs}
+                  barnumber={idx}
+                  barInClipboard={barInClipboard}
+                  setBarInClipboard={setBarInClipboard}
+                />
+                <EachTab
+                  key={"tab-" + `${idx}`}
+                  noteStringList={datatabs.stringTune}
+                  isFirst={idx == 0}
+                />
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
 }
-
