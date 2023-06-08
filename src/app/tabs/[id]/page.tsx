@@ -5,6 +5,7 @@ import { dummyTab } from "@/dummydata/dummytab"
 
 import { useSampler } from "@/hooks/tone"
 import { EachBar, EachTab, Tune } from "@/components/tabs/eachnotefield"
+import Test from "@/components/tabs/testnotemapping"
 
 export default function EditTab(): ReactNode {
   const [datatabs, setDatatabs] = useState(dummyTab)
@@ -50,6 +51,7 @@ export default function EditTab(): ReactNode {
         Song Name
       </div>
       {/* <MyTimer expiryTimestamp={time} /> */}
+      <Test />
       <div className="px-auto mx-auto w-9/12 content-center justify-center">
         <button
           onClick={(_) => {
