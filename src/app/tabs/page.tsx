@@ -1,33 +1,4 @@
-const userTabs = [
-  {
-    id: 1,
-    title: 'The Scientist',
-    href: '/tabs/1',
-    date: 'Mar 16, 2020',
-    datetime: '2020-03-16',
-  },
-  {
-    id: 2,
-    title: 'The Scientist',
-    href: '/tabs/2',
-    date: 'Mar 16, 2020',
-    datetime: '2020-03-16',
-  },
-  {
-    id: 3,
-    title: 'The Scientist',
-    href: '/tabs/3',
-    date: 'Mar 16, 2020',
-    datetime: '2020-03-16',
-  },
-  {
-    id: 4,
-    title: 'The Scientist',
-    href: '/tabs/4',
-    date: 'Mar 16, 2020',
-    datetime: '2020-03-16',
-  },
-]
+import { userTabs } from "@/dummydata/dummytab"
 
 export default function Tabs() {
   return (

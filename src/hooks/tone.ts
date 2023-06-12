@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react"
 import { Time } from "tone/build/esm/core/type/Units"
-import { getDestination } from "tone/build/esm/index"
+import { Destination, FFT, getDestination } from "tone/build/esm/index"
 import { Sampler, SamplerOptions } from "tone/build/esm/instrument/Sampler"
+import { Player, PlayerOptions } from "tone/build/esm/source/buffer/Player"
 
 export const notes = {
   "guitar-acoustic": {
@@ -148,3 +149,25 @@ class SamplerT<T extends keyof typeof notes> extends Sampler {
     this.triggerAttackRelease(note, duration, time, velocity)
   }
 }
+
+// export const useAnalyzer = (audioPath: string | undefined) => {
+
+//   const [player, setPlayer] = useState<Player | null>(null)
+//   const [convertFFT, setConvertFFT] = useState<FFT | null>(null) 
+
+//   useEffect(() => {
+//     if (audioPath == null || audioPath == undefined) return
+
+//     const player = new Player(audioPath)
+//     const convertFFT = new FFT(128)
+
+//     player.chain(convertFFT, Destination)
+//     console.log(player)
+
+//     setPlayer(player)
+//     setConvertFFT(convertFFT)
+
+//   }, [])
+
+//   return {player, convertFFT}
+// }
