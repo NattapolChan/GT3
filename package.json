@@ -21,6 +21,7 @@
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.18",
     "@popperjs/core": "^2.11.8",
+    "@tensorflow/tfjs": "^4.7.0",
     "clsx": "^1.2.1",
     "formik": "^2.4.0",
     "framer-motion": "^10.12.12",
@@ -29,6 +30,7 @@
     "next": "13.3.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-popper": "^2.3.0",
     "react-timer-hook": "^3.0.6",
     "tone": "^14.8.49"

@@ -2,12 +2,22 @@
 
 import { ChangeEvent, useEffect, useState, type ReactNode } from "react"
 import { dummyTab } from "@/dummydata/dummytab"
-
 import { useSampler } from "@/hooks/tone"
 import { EachBar, EachTab, Tune } from "@/components/tabs/eachnotefield"
+import { Player } from "tone/build/esm/source/buffer/Player"
+import { FFT, Sampler, ToneAudioBuffer, getDestination } from "tone/build/esm/index"
+import { Buffer } from "tone/build/esm/index"
+import { signal, tensor1d, tensor } from "@tensorflow/tfjs"
 
 export default function EditTab(): ReactNode {
+
   const [datatabs, setDatatabs] = useState(dummyTab)
+  const [file, setFile] = useState<File>()
+
+  const handleinputfile = (e : ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return
+    setFile(e.target.files[0])
+  }
 
   const [barInClipboard, setBarInClipboard] = useState([
     [-1, -1, -1, -1, -1, -1],
@@ -27,6 +37,64 @@ export default function EditTab(): ReactNode {
     isLoaded,
     error,
   } = useSampler("guitar-acoustic")
+
+  const [buffer, setBuffer] = useState<ToneAudioBuffer | null>(null)
+  const [convertFFT, setConvertFFT] = useState<FFT | null>(null) 
+  const [sample, setSample] = useState<any>({})
+  const [player, setPlayer] = useState<Player | null>(null)
+
+  useEffect(() => {
+    if (file == null || file == undefined) return
+    const fileURL = URL.createObjectURL(file)
+    const buffer = new Buffer(fileURL)
+    const convertFFT = new FFT(1024)
+
+    setBuffer(buffer)
+    setConvertFFT(convertFFT)
+    console.log(buffer)
+  }, [file])
+
+  useEffect(() => {
+    if (!buffer) return
+    // const player = new Player(buffer, () => console.log("loading...../"))
+    // setPlayer(player)
+    const audioArray = tensor1d(buffer.getChannelData(0))
+    const stftOutput = signal.stft(audioArray, 1000, 48000/8)
+    stftOutput.print()
+    const values = stftOutput.dataSync()
+    const slice = Array.from(values)
+    const shape = stftOutput.shape
+    console.log(shape)
+    var amplitude = []
+    var phase = []
+    var tempOdd = []
+    var tempEven = []
+    for (let i=0;i<slice.length;i++) {
+      if (!shape[1]) return
+      if (!(i % (shape[1]*2)) && i!=0) {
+        amplitude.push(tempEven)
+        phase.push(tempOdd)
+        tempOdd = []
+        tempEven = []
+      }
+
+      if (i%2) tempOdd.push(slice[i])
+      else tempEven.push(slice[i])
+    }
+    console.log(amplitude)
+  }, [buffer])
+
+  // useEffect(() => {
+  //   if (!player || !convertFFT) return
+  // }, [player])
+
+  // useEffect(() => {
+  //   if (!convertFFT || !player) return
+  //   const destination = getDestination()
+  //   player.chain(convertFFT, destination)
+  //   const levels = convertFFT.getValue()
+  //   console.log(levels)
+  // }, [convertFFT])
 
   useEffect(() => {
     const keypressHandler = (e: KeyboardEvent) => {
@@ -62,8 +130,9 @@ export default function EditTab(): ReactNode {
           play
         </button>
         <button>
-          <input type="file"></input>
+          <input type='file' accept="audio/mp3" onChange={(e) => handleinputfile(e)}></input>
         </button>
+
         <div className="absolute pt-4 text-sm">
           {<Tune stringTune={datatabs.stringTune} />}
         </div>
