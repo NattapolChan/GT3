@@ -8,7 +8,7 @@ import { EachBar, EachTab, Tune } from "@/components/tabs/eachnotefield"
 import { Player } from "tone/build/esm/source/buffer/Player"
 import { FFT, Sampler, ToneAudioBuffer, getDestination } from "tone/build/esm/index"
 import { Buffer } from "tone/build/esm/index"
-import { signal, tensor1d, tensor } from "@tensorflow/tfjs"
+import { signal, tensor1d, tensor, Tensor, Rank, Tensor1D } from "@tensorflow/tfjs"
 
 export default function EditTab(): ReactNode {
 
@@ -40,27 +40,56 @@ export default function EditTab(): ReactNode {
   } = useSampler("guitar-acoustic")
 
   const [buffer, setBuffer] = useState<ToneAudioBuffer | null>(null)
-  const [convertFFT, setConvertFFT] = useState<FFT | null>(null) 
-  const [sample, setSample] = useState<any>({})
-  const [player, setPlayer] = useState<Player | null>(null)
+  const [channelData, setChannelData] = useState<Float32Array | null>(null)
+  const [audioArray, setAudioArray] = useState<Tensor1D | null>(null)
+  const [stftOutput, setStftOutput] = useState<Tensor<Rank>| null>(null)
 
   useEffect(() => {
     if (file == null || file == undefined) return
     const fileURL = URL.createObjectURL(file)
     const buffer = new Buffer(fileURL)
-    const convertFFT = new FFT(1024)
 
     setBuffer(buffer)
-    setConvertFFT(convertFFT)
-    console.log(buffer)
   }, [file])
 
   useEffect(() => {
     if (!buffer) return
+    const channelData = buffer?.getChannelData(0)
+    setChannelData(channelData)
+    
+  }, [buffer])
+
+  useEffect(() => {
+
+    console.log("calling")
+    console.log(channelData)
+    
+    if (!channelData || channelData.length==0) return
     // const player = new Player(buffer, () => console.log("loading...../"))
     // setPlayer(player)
-    const audioArray = tensor1d(buffer.getChannelData(0))
-    const stftOutput = signal.stft(audioArray, 1000, 48000/8)
+    console.log(tensor1d)
+    const audioArray = tensor1d(channelData)
+    setAudioArray(audioArray)
+  }, [channelData])
+
+  useEffect(() => {
+    if (!audioArray) return
+    console.log(buffer)
+    console.log(channelData)
+    console.log(audioArray)
+    const stftOutput = signal.stft(audioArray, 200, 48000/8)
+    setStftOutput(stftOutput)
+  }, [audioArray])
+
+  useEffect(() => {
+    if (!stftOutput) return
+    if (!audioArray || audioArray.shape[0] === 0) {
+      console.log("not yey ")
+      console.log(stftOutput)
+      return
+    }
+    console.log(buffer)
+    console.log(audioArray)
     stftOutput.print()
     const values = stftOutput.dataSync()
     const slice = Array.from(values)
@@ -83,7 +112,7 @@ export default function EditTab(): ReactNode {
       else tempEven.push(slice[i])
     }
     console.log(amplitude)
-  }, [buffer])
+  }, [stftOutput])
 
   // useEffect(() => {
   //   if (!player || !convertFFT) return
