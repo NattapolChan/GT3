@@ -2,6 +2,12 @@
 - Generate Guitar Tablature from audio file
 - Responsive Editor
 
+## Todo
+- [ ] Integrate ViT model backend (flask)
+- [ ] Improve UI
+- [ ] use million.js to make rendering faster
+- [ ] Setup user backend (node)
+
 ## Getting Started
 
 First, run the development server:
