@@ -1,8 +1,9 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Formik, Field, Form, FormikHelpers } from 'formik'
 import { debounceAsync } from '@/components/tabs/debounceasync'
 import AutoSave from '@/components/tabs/autosave'
 import NoteInput from '@/components/tabs/noteinput'
+import { useStopwatch } from 'react-timer-hook';
 
 import { type EachBarProps, EachTabProps, Values } from '@/type/tabs'
 
@@ -20,13 +21,18 @@ export const Tune = ({ stringTune }: any) => {
   )
 }
 
-export const EachTab = ({ noteStringList, isFirst }: EachTabProps) => {
+export const EachTab = ({ noteStringList, isFirst, time }: EachTabProps) => {
   return (
-    <div className="absolute lg:w-1/4 w-[37.325%] -translate-y-24">
+    <div className="absolute 2xl:w-[14.875%] lg:w-1/4 w-[37.325%] -translate-y-24">
+      <svg width="92%" height="84" className="absolute">
+        <line x1="7%" y1="0%" 
+          x2="7%" y2="100%" 
+          className={(time==-1) ? "stroke-none" : "stroke-green-500 stroke-[8px] ease-linear opacity-70 transition translate-x-80 duration-1000"}/>
+      </svg>
       {noteStringList.map((noteString, idx) => {
         return (
           <div key={idx} className="z-0">
-            {<svg width="100%" height="12">
+            {<svg width="100%" height="12" className="z-0">
               <line
                 x1="0%"
                 y1="95%"
@@ -68,7 +74,6 @@ export const EachBar = ({
     tabId: number,
     barId: number
   ) => {
-    console.log('update')
     let newdatatabsArray = [...datatabs.tab]
     if (!values.note) {
       values.note = -1
@@ -83,9 +88,7 @@ export const EachBar = ({
   }
 
   const pasteBarfromClipboard = () => {
-    console.log('update')
     if (barInClipboard === emptytabsArray) {
-      console.log('Got empty clipboard')
     } else {
       let newdatatabsArray = [
         ...datatabs.tab.slice(0, barnumber + 1),
@@ -101,12 +104,9 @@ export const EachBar = ({
     }
   }
 
-  const copyBartoClipboard = () => {
-    setBarInClipboard(datatabs.tab[barnumber])
-  }
+  const copyBartoClipboard = () => {setBarInClipboard(datatabs.tab[barnumber])}
 
   const addNoteInDatatabs = (barId: number) => {
-    console.log('update')
     let newdatatabsArray = [
       ...datatabs.tab.slice(0, barId + 1),
       emptytabsArray,
@@ -121,7 +121,6 @@ export const EachBar = ({
   }
 
   const delNoteInDatatabs = (barId: number) => {
-    console.log('update')
     let newdatatabsArray = [
       ...datatabs.tab.slice(0, barId),
       ...datatabs.tab.slice(barId + 1),
