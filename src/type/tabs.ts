@@ -27,6 +27,7 @@ export type EachBarProps = {
 export type EachTabProps = {
   noteStringList: Array<string>
   isFirst: boolean
+  time: number
 }
 
 export type eachTabType = Array<Array<Array<fretRange>>>
