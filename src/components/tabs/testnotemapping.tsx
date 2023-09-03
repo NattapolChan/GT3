@@ -11,7 +11,7 @@ const dummyNote: Array<Note> = [
 
 export const tabToNote = ( fretId: number, stringId: number) => {
     // return null if string not exist / no note played
-    const noteAtZero : Array<Note> = ["E2", "A2", "D3", "G3", "B3", "E4"]
+    const noteAtZero : Array<Note> = ["E4", "B3", "G3", "D3", "A2", "E2"]
     const thisNoteAtZero = noteAtZero[stringId]
     const number = dummyNote.indexOf(thisNoteAtZero)
     if (fretId == -1) return null
